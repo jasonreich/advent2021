@@ -36,12 +36,11 @@ mod test {
   use super::*;
   use crate::util::read_file;
   
+  static EXAMPLE_INPUT: [i32; 10] = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
+
   #[test]
   fn example_part1() {
-    let input = vec![199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
-    let output = 7;
-
-    assert_eq!(output, part1(input.into_iter()))
+    assert_eq!(7, part1(EXAMPLE_INPUT.iter().map(|value| *value)))
   }
 
   #[test]
@@ -53,10 +52,7 @@ mod test {
 
   #[test]
   fn example_part2() {
-    let input = vec![199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
-    let output = 5;
-
-    assert_eq!(output, part2(input.into_iter()))
+    assert_eq!(5, part2(EXAMPLE_INPUT.iter().map(|value| *value)));
   }
 
   #[test]
