@@ -1,4 +1,4 @@
-pub fn count_increases(input: impl Iterator<Item = i32>) -> i32 {
+pub fn part1(input: impl Iterator<Item = i32>) -> i32 {
   let mut count: i32 = 0;
   let mut last: i32 = i32::MAX;
 
@@ -12,7 +12,7 @@ pub fn count_increases(input: impl Iterator<Item = i32>) -> i32 {
   count
 }
 
-pub fn count_increases2(input: impl Iterator<Item = i32>) -> i32 {
+pub fn part2(input: impl Iterator<Item = i32>) -> i32 {
   let mut oldest = 0;
   let mut middle = 0;
   let mut newest = 0;
@@ -28,41 +28,41 @@ pub fn count_increases2(input: impl Iterator<Item = i32>) -> i32 {
     }
   });
   
-  count_increases(windowed)
+  part1(windowed)
 }
 
 #[cfg(test)]
 mod test {
   use super::*;
-  use super::super::util::read_file;
+  use crate::util::read_file;
   
   #[test]
-  fn example() {
+  fn example_part1() {
     let input = vec![199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
     let output = 7;
 
-    assert_eq!(output, count_increases(input.into_iter()))
+    assert_eq!(output, part1(input.into_iter()))
   }
 
   #[test]
-  fn part1() {
+  fn test_part1() {
     let i = read_file("day1.txt").unwrap();
-    let count = count_increases(i);
+    let count = part1(i);
     println!("Count: {}", count);
   }
 
   #[test]
-  fn example2() {
+  fn example_part2() {
     let input = vec![199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
     let output = 5;
 
-    assert_eq!(output, count_increases2(input.into_iter()))
+    assert_eq!(output, part2(input.into_iter()))
   }
 
   #[test]
-  fn part2() {
+  fn exec_part2() {
     let i = read_file("day1.txt").unwrap();
-    let count = count_increases2(i);
+    let count = part2(i);
     println!("Count: {}", count);
   }
 }
