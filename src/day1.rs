@@ -47,7 +47,7 @@ mod test {
   fn test_part1() {
     let i = read_file("day1.txt").unwrap();
     let count = part1(i);
-    println!("Count: {}", count);
+    println!("Part 1 – Count: {}", count);
   }
 
   #[test]
@@ -59,6 +59,6 @@ mod test {
   fn exec_part2() {
     let i = read_file("day1.txt").unwrap();
     let count = part2(i);
-    println!("Count: {}", count);
+    println!("Part 2 – Count: {}", count);
   }
 }
