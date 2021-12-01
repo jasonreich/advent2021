@@ -36,11 +36,11 @@ mod test {
   use super::*;
   use crate::util::read_file;
   
-  static EXAMPLE_INPUT: [i32; 10] = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
+  static EXAMPLE_INPUT: &[i32; 10] = &[199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
 
   #[test]
   fn example_part1() {
-    assert_eq!(7, part1(EXAMPLE_INPUT.iter().map(|value| *value)))
+    assert_eq!(7, part1(EXAMPLE_INPUT.iter().cloned()))
   }
 
   #[test]
@@ -52,7 +52,7 @@ mod test {
 
   #[test]
   fn example_part2() {
-    assert_eq!(5, part2(EXAMPLE_INPUT.iter().map(|value| *value)));
+    assert_eq!(5, part2(EXAMPLE_INPUT.iter().cloned()));
   }
 
   #[test]
