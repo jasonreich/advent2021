@@ -43,7 +43,7 @@ mod test {
   fn test_day01_part1() {
     let i = read_file_as_i32("day01.txt").unwrap();
     let count = part1(i);
-    println!("Part 1 – Count: {}", count);
+    println!("Day 1 Part 1 – Count: {}", count);
   }
 
   #[test]
@@ -55,6 +55,6 @@ mod test {
   fn exec_day01_part2() {
     let i = read_file_as_i32("day01.txt").unwrap();
     let count = part2(i);
-    println!("Part 2 – Count: {}", count);
+    println!("Day 1 Part 2 – Count: {}", count);
   }
 }
