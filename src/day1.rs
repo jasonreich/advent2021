@@ -30,7 +30,7 @@ pub fn part2(mut input: impl Iterator<Item = i32>) -> i32 {
 #[cfg(test)]
 mod test {
   use super::*;
-  use crate::util::read_file;
+  use crate::util::read_file_as_i32;
   
   static EXAMPLE_INPUT: &[i32; 10] = &[199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
 
@@ -41,7 +41,7 @@ mod test {
 
   #[test]
   fn test_part1() {
-    let i = read_file("day1.txt").unwrap();
+    let i = read_file_as_i32("day1.txt").unwrap();
     let count = part1(i);
     println!("Part 1 – Count: {}", count);
   }
@@ -53,7 +53,7 @@ mod test {
 
   #[test]
   fn exec_part2() {
-    let i = read_file("day1.txt").unwrap();
+    let i = read_file_as_i32("day1.txt").unwrap();
     let count = part2(i);
     println!("Part 2 – Count: {}", count);
   }
