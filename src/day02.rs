@@ -15,7 +15,7 @@ pub fn parse_direction(input: String) -> Option<Direction> {
 }
 
 pub fn parse_record(line: String) -> Option<Record> {
-    let mut parts = line.split(' ');
+    let mut parts = line.split_whitespace();
     let direction_part = parts.next()?;
     let direction = parse_direction(direction_part.to_string())?; 
     let number_part = parts.next()?;
