@@ -40,6 +40,25 @@ pub fn part1(input: impl Iterator<Item = Record>) -> i32 {
     horizontal * depth
 }
 
+pub fn part2(input: impl Iterator<Item = Record>) -> i32 {
+    let mut horizontal = 0;
+    let mut depth = 0;
+    let mut aim = 0;
+
+    for (direction, magnitude) in input {
+        match direction {
+            Direction::Forward => {
+                horizontal += magnitude;
+                depth += magnitude * aim;
+            },
+            Direction::Up => aim -= magnitude,
+            Direction::Down => aim += magnitude,
+        }
+    }
+
+    horizontal * depth
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -61,8 +80,26 @@ mod test {
     }
 
     #[test]
-    fn example1() {
+    fn example_part1() {
         let input = read_file("day2.example", parse_record).unwrap();
         assert_eq!(150, part1(input))
+    }
+
+    #[test]
+    fn exec_part1() {
+        let input = read_file("day2.txt", parse_record).unwrap();
+        println!("Day 2 Part 1: {}", part1(input))
+    }
+
+    #[test]
+    fn example_part2() {
+        let input = read_file("day2.example", parse_record).unwrap();
+        assert_eq!(900, part2(input))
+    }
+
+    #[test]
+    fn exec_part2() {
+        let input = read_file("day2.txt", parse_record).unwrap();
+        println!("Day 2 Part 2: {}", part2(input))
     }
 }
