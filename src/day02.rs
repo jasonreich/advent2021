@@ -74,32 +74,32 @@ mod test {
             (Direction::Down, 8),
             (Direction::Forward, 2),
         ];
-        let result: Vec<(Direction, i32)> = read_file("day2.example", parse_record).unwrap().collect();
+        let result: Vec<(Direction, i32)> = read_file("day02.example", parse_record).unwrap().collect();
 
         assert_eq!(expected, result);
     }
 
     #[test]
     fn example_day02_part1() {
-        let input = read_file("day2.example", parse_record).unwrap();
+        let input = read_file("day02.example", parse_record).unwrap();
         assert_eq!(150, part1(input))
     }
 
     #[test]
     fn exec_day02_part1() {
-        let input = read_file("day2.txt", parse_record).unwrap();
+        let input = read_file("day02.txt", parse_record).unwrap();
         println!("Day 2 Part 1: {}", part1(input))
     }
 
     #[test]
     fn example_day02_part2() {
-        let input = read_file("day2.example", parse_record).unwrap();
+        let input = read_file("day02.example", parse_record).unwrap();
         assert_eq!(900, part2(input))
     }
 
     #[test]
     fn exec_day02_part2() {
-        let input = read_file("day2.txt", parse_record).unwrap();
+        let input = read_file("day02.txt", parse_record).unwrap();
         println!("Day 2 Part 2: {}", part2(input))
     }
 }
