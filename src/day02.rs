@@ -65,7 +65,7 @@ mod test {
     use crate::util::read_file;
 
     #[test]
-    fn parser() {
+    fn day02_parser() {
         let expected: Vec<(Direction, i32)> = vec![
             (Direction::Forward, 5),
             (Direction::Down, 5),
@@ -80,25 +80,25 @@ mod test {
     }
 
     #[test]
-    fn example_part1() {
+    fn example_day02_part1() {
         let input = read_file("day2.example", parse_record).unwrap();
         assert_eq!(150, part1(input))
     }
 
     #[test]
-    fn exec_part1() {
+    fn exec_day02_part1() {
         let input = read_file("day2.txt", parse_record).unwrap();
         println!("Day 2 Part 1: {}", part1(input))
     }
 
     #[test]
-    fn example_part2() {
+    fn example_day02_part2() {
         let input = read_file("day2.example", parse_record).unwrap();
         assert_eq!(900, part2(input))
     }
 
     #[test]
-    fn exec_part2() {
+    fn exec_day02_part2() {
         let input = read_file("day2.txt", parse_record).unwrap();
         println!("Day 2 Part 2: {}", part2(input))
     }

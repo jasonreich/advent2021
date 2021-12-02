@@ -35,24 +35,24 @@ mod test {
   static EXAMPLE_INPUT: &[i32; 10] = &[199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
 
   #[test]
-  fn example_part1() {
+  fn example_day01_part1() {
     assert_eq!(7, part1(EXAMPLE_INPUT.iter().cloned()))
   }
 
   #[test]
-  fn test_part1() {
+  fn test_day01_part1() {
     let i = read_file_as_i32("day1.txt").unwrap();
     let count = part1(i);
     println!("Part 1 – Count: {}", count);
   }
 
   #[test]
-  fn example_part2() {
+  fn example_day01_part2() {
     assert_eq!(5, part2(EXAMPLE_INPUT.iter().cloned()));
   }
 
   #[test]
-  fn exec_part2() {
+  fn exec_day01_part2() {
     let i = read_file_as_i32("day1.txt").unwrap();
     let count = part2(i);
     println!("Part 2 – Count: {}", count);
