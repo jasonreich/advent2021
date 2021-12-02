@@ -1,6 +1,6 @@
-pub fn part1(input: impl Iterator<Item = i32>) -> i32 {
+pub fn part1(mut input: impl Iterator<Item = i32>) -> i32 {
   let mut count: i32 = 0;
-  let mut last: i32 = i32::MAX;
+  let mut last: i32 = input.next().unwrap();
 
   for value in input {
     if value > last {
@@ -12,20 +12,16 @@ pub fn part1(input: impl Iterator<Item = i32>) -> i32 {
   count
 }
 
-pub fn part2(input: impl Iterator<Item = i32>) -> i32 {
+pub fn part2(mut input: impl Iterator<Item = i32>) -> i32 {
   let mut oldest = 0;
-  let mut middle = 0;
-  let mut newest = 0;
+  let mut middle = input.next().unwrap();
+  let mut newest = input.next().unwrap();
 
-  let windowed = input.enumerate().filter_map(| (index, input) | {
+  let windowed = input.map(| input | {
     oldest = middle;
     middle = newest;
     newest = input;
-    if index >= 2 {
-      Some(oldest + middle + newest)
-    } else {
-      None
-    }
+    oldest + middle + newest
   });
   
   part1(windowed)
