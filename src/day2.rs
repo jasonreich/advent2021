@@ -5,13 +5,39 @@ pub enum Direction {
     Down,
 }
 
-pub fn parse_direction(input: String) -> Direction {
+pub fn parse_direction(input: String) -> Option<Direction> {
     match input.as_ref() {
-        "forward" => Direction::Forward,
-        "up" => Direction::Up,
-        "down" => Direction::Down,
-        _ => unimplemented!(),
+        "forward" => Some(Direction::Forward),
+        "up" => Some(Direction::Up),
+        "down" => Some(Direction::Down),
+        _ => None,
     }
+}
+
+pub fn parse_record(line: String) -> Option<Record> {
+    let mut parts = line.split(' ');
+    let direction_part = parts.next()?;
+    let direction = parse_direction(direction_part.to_string())?; 
+    let number_part = parts.next()?;
+    let number = number_part.to_string().parse().ok()?;
+    Some((direction, number))
+}
+
+pub type Record = (Direction, i32);
+
+pub fn part1(input: impl Iterator<Item = Record>) -> i32 {
+    let mut horizontal = 0;
+    let mut depth = 0;
+
+    for (direction, magnitude) in input {
+        match direction {
+            Direction::Forward => horizontal += magnitude,
+            Direction::Up => depth -= magnitude,
+            Direction::Down => depth += magnitude,
+        }
+    }
+
+    horizontal * depth
 }
 
 #[cfg(test)]
@@ -29,14 +55,14 @@ mod test {
             (Direction::Down, 8),
             (Direction::Forward, 2),
         ];
-        let result: Vec<(Direction, i32)> = read_file("day2.example", |line| {
-            let mut parts = line.split(' ');
-            let direction_part = parts.next()?;
-            let number_part = parts.next()?;
-            let number = number_part.to_string().parse().ok()?;
-            Some((parse_direction(direction_part.to_string()), number))
-        }).unwrap().collect();
+        let result: Vec<(Direction, i32)> = read_file("day2.example", parse_record).unwrap().collect();
 
         assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn example1() {
+        let input = read_file("day2.example", parse_record).unwrap();
+        assert_eq!(150, part1(input))
     }
 }
