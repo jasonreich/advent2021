@@ -20,20 +20,16 @@ fn most_common(input: Vec<bool>) -> bool {
 }
 
 pub fn part1(input: Vec<Vec<bool>>) -> u32 {
+  let line_length = input.iter().next().unwrap().len();
   let mut epsilon: u32 = 0;
-  let mut gamma: u32 = 0;
-  let first = input.iter().next().unwrap();
-  for i in 0..first.len() {
+  for i in 0..line_length {
     if most_common(input.iter().map(| line | line[i] ).collect()) {
       epsilon += 1;
-    } else {
-      gamma += 1;
     }
     epsilon = epsilon << 1;
-    gamma = gamma << 1;
   }
   epsilon = epsilon >> 1;
-  gamma = gamma >> 1;
+  let gamma = !epsilon & ((1 << line_length) - 1);
   epsilon * gamma
 }
 
