@@ -8,14 +8,13 @@ pub fn line_parser(input: String) -> Option<Vec<bool>> {
   }).collect())
 }
 
-fn most_common(input: Vec<bool>) -> bool {
+fn most_common(input: Vec<bool>) -> Option<bool> {
   let input_size = input.len();
   let count_true = input.iter().filter(| value | **value).count();
-  let double_count_true = count_true * 2;
-  if double_count_true == input_size {
-    panic!()
+  if count_true == input_size || count_true == 0 {
+    None
   } else {
-    count_true * 2 > input_size
+    Some(count_true * 2 > input_size)
   }
 }
 
@@ -23,7 +22,7 @@ pub fn part1(input: Vec<Vec<bool>>) -> u32 {
   let line_length = input.iter().next().unwrap().len();
   let mut epsilon: u32 = 0;
   for i in 0..line_length {
-    if most_common(input.iter().map(| line | line[i] ).collect()) {
+    if most_common(input.iter().map(| line | line[i] ).collect()).unwrap() {
       epsilon += 1;
     }
     epsilon = epsilon << 1;
@@ -46,8 +45,10 @@ mod test {
 
   #[test]
   fn test_most_common() {
-    assert_eq!(true, most_common(vec![true, true, false, true]));
-    assert_eq!(false, most_common(vec![false, false, false, true]));
+    assert_eq!(Some(true), most_common(vec![true, true, false, true]));
+    assert_eq!(Some(false), most_common(vec![false, false, false, true]));
+    assert_eq!(None, most_common(vec![false, false, false, false]));
+    assert_eq!(None, most_common(vec![true, true, true, true]));
   }
 
   #[test]
