@@ -3,15 +3,15 @@ use crate::util::read_lines;
 
 type Coord = (u32, u32);
 
-fn range(start: u32, end: u32) -> impl Iterator<Item = u32> {
+fn range(start: u32, end: u32) -> Vec<u32> {
   if start <= end {
-    start..=end
+    (start..=end).collect()
   } else {
-    end..=start
+    (end..=start).rev().collect()
   }
 }
 
-pub fn read_puzzle(filename: &str) -> impl Iterator<Item = Coord> {
+pub fn read_puzzle(filename: &str, with_diag: bool) -> impl Iterator<Item = Coord> {
   let intervals = read_lines(filename, | line | {
     let values: Vec<u32> = line.split(" -> ")
       .flat_map(| coord | coord.split(","))
@@ -21,18 +21,22 @@ pub fn read_puzzle(filename: &str) -> impl Iterator<Item = Coord> {
     Some(((values[0], values[1]), (values[2], values[3])))
   }).unwrap();
 
-  intervals.flat_map(|((sx, sy), (tx, ty))| -> Vec<Coord> {
+  intervals.flat_map(move |((sx, sy), (tx, ty))| -> Vec<Coord> {
     if sx == tx {
-      range(sy, ty).map(|y| (sx, y)).collect()
+      range(sy, ty).iter().map(|y| (sx, *y)).collect()
     } else if sy == ty {
-      range(sx, tx).map(|x| (x, sy)).collect()
+      range(sx, tx).iter().map(|x| (*x, sy)).collect()
+    } else if with_diag {
+      range(sx, tx).iter().zip(range(sy, ty).iter())
+        .map(|(&x, &y)| (x, y))
+        .collect()
     } else {
       vec![]
     }
   })
 }
 
-pub fn part1(input: impl Iterator<Item = Coord>) -> u32 {
+pub fn find_danger(input: impl Iterator<Item = Coord>) -> u32 {
   let mut count = 0;
   let mut seen_once: HashSet<Coord> = HashSet::new();
   let mut seen_many: HashSet<Coord> = HashSet::new();
@@ -51,12 +55,22 @@ mod test {
   use super::*;
 
   #[test]
-  fn example_day05_part01() {
-    assert_eq!(5, part1(read_puzzle("day05.example")));
+  fn example_day05_part1() {
+    assert_eq!(5, find_danger(read_puzzle("day05.example", false)));
   }
 
   #[test]
-  fn exec_day05_part01() {
-    println!("Day 05, Part 1: {}", part1(read_puzzle("day05.txt")));
+  fn exec_day05_part1() {
+    println!("Day 05, Part 1: {}", find_danger(read_puzzle("day05.txt", false)));
+  }
+  
+  #[test]
+  fn example_day05_part2() {
+    assert_eq!(12, find_danger(read_puzzle("day05.example", true)));
+  }
+
+  #[test]
+  fn exec_day05_part2() {
+    println!("Day 05, Part 2: {}", find_danger(read_puzzle("day05.txt", true)));
   }
 }
