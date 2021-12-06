@@ -57,7 +57,7 @@ fn build_board(input: Vec<Vec<u32>>) -> Board {
   [rows, columns].concat()
 }
 
-pub fn play(calls: Vec<u32>, mut boards: Vec<Board>) -> Option<u32> {
+pub fn play(calls: Calls, mut boards: Vec<Board>) -> Option<u32> {
   for call in calls {
     for board in boards.as_mut_slice() {
       let mut line_signal = false;
