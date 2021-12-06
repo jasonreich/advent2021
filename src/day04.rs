@@ -57,7 +57,7 @@ fn build_board(input: Vec<Vec<u32>>) -> Board {
   [rows, columns].concat()
 }
 
-pub fn play(calls: Calls, mut boards: Vec<Board>) -> Option<u32> {
+pub fn part1(calls: Calls, mut boards: Vec<Board>) -> Option<u32> {
   for call in calls {
     for board in boards.as_mut_slice() {
       let mut line_signal = false;
@@ -75,6 +75,29 @@ pub fn play(calls: Calls, mut boards: Vec<Board>) -> Option<u32> {
     }
   }
   return None;
+}
+
+pub fn part2(calls: Calls, mut boards: Vec<Board>) -> Option<u32> {
+  let mut last_winner: Option<u32> = None;
+  for call in calls {
+    for board in boards.as_mut_slice() {
+      let mut line_signal = false;
+      if board.iter().all(| strip | !strip.is_empty()) {
+        board.iter_mut().for_each(| strip | { 
+          strip.remove(&call);
+          if strip.is_empty() {
+            line_signal = true;
+          }
+        });
+      }
+      if line_signal {
+        let uniques: HashSet<u32> = board.iter().flatten().copied().collect();
+        let sum: u32 = uniques.iter().sum();
+        last_winner = Some(sum * call);
+      }
+    }
+  }
+  return last_winner;
 }
 
 #[cfg(test)]
@@ -121,7 +144,7 @@ mod test {
 
     let (calls, boards) = parse_input(&mut lines);
 
-    let result = play(calls, boards);
+    let result = part1(calls, boards);
 
     assert_eq!(result, Some(4512));
   }
@@ -132,8 +155,30 @@ mod test {
 
     let (calls, boards) = parse_input(&mut lines);
 
-    let result = play(calls, boards).unwrap();
+    let result = part1(calls, boards).unwrap();
 
     println!("Day 4 Part 1: {}", result);
+  }
+  
+  #[test]
+  fn example_day04_part2() {
+    let mut lines = read_file("day04.example").unwrap();
+
+    let (calls, boards) = parse_input(&mut lines);
+
+    let result = part2(calls, boards);
+
+    assert_eq!(result, Some(1924));
+  }
+
+  #[test]
+  fn exec_day04_part2() {
+    let mut lines = read_file("day04.txt").unwrap();
+
+    let (calls, boards) = parse_input(&mut lines);
+
+    let result = part2(calls, boards).unwrap();
+
+    println!("Day 4 Part 2: {}", result);
   }
 }
