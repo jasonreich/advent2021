@@ -17,7 +17,7 @@ pub fn parse_direction(input: String) -> Option<Direction> {
 pub fn parse_record(line: String) -> Option<Record> {
     let mut parts = line.split_whitespace();
     let direction_part = parts.next()?;
-    let direction = parse_direction(direction_part.to_string())?; 
+    let direction = parse_direction(direction_part.to_string())?;
     let number_part = parts.next()?;
     let number = number_part.to_string().parse().ok()?;
     Some((direction, number))
@@ -50,7 +50,7 @@ pub fn part2(input: impl Iterator<Item = Record>) -> i32 {
             Direction::Forward => {
                 horizontal += magnitude;
                 depth += magnitude * aim;
-            },
+            }
             Direction::Up => aim -= magnitude,
             Direction::Down => aim += magnitude,
         }
@@ -74,7 +74,8 @@ mod test {
             (Direction::Down, 8),
             (Direction::Forward, 2),
         ];
-        let result: Vec<(Direction, i32)> = read_lines("day02.example", parse_record).unwrap().collect();
+        let result: Vec<(Direction, i32)> =
+            read_lines("day02.example", parse_record).unwrap().collect();
 
         assert_eq!(expected, result);
     }
