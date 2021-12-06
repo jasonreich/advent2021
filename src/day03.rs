@@ -76,8 +76,9 @@ mod test {
     fn test_most_common() {
         assert_eq!(Some(true), most_common(vec![true, true, false, true]));
         assert_eq!(Some(false), most_common(vec![false, false, false, true]));
-        assert_eq!(None, most_common(vec![false, false, false, false]));
-        assert_eq!(None, most_common(vec![true, true, true, true]));
+        assert_eq!(Some(false), most_common(vec![false, false, false, false]));
+        assert_eq!(Some(true), most_common(vec![true, true, true, true]));
+        assert_eq!(None, most_common(vec![false, false, true, true]));
     }
 
     #[test]
