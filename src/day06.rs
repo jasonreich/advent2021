@@ -18,6 +18,26 @@ pub fn part1(input: Shoal, iterations: u32) -> usize {
   shoal.len()
 }
 
+pub fn part2(input: Shoal, iterations: u32) -> i64 {
+  let mut ocean: [i64; 9] = [0, 0, 0 , 0, 0, 0, 0, 0, 0];
+
+  // Initialise ocean
+  for fish in input {
+    ocean[fish as usize] += 1;
+  }
+
+  for _ in 0..iterations {
+    let ripe = ocean[0];
+    for i in 1..=8 {
+      ocean[i - 1] = ocean[i]
+    }
+    ocean[8] = ripe;
+    ocean[6] += ripe;
+  }
+
+  ocean.iter().sum()
+}
+
 #[cfg(test)]
 mod test {
   use crate::util::read_lines;
@@ -42,5 +62,21 @@ mod test {
     }).unwrap().next().unwrap();
 
     println!("Day 06 Part 1 - {}", part1(input, 80));
+  }
+
+  #[test]
+  fn example_day06_part2() {
+    assert_eq!(26, part2(vec![3,4,3,1,2], 18));
+    assert_eq!(5934, part2(vec![3,4,3,1,2], 80));
+    assert_eq!(26984457539, part2(vec![3,4,3,1,2], 256));
+  }
+
+  #[test]
+  fn exec_day06_part2() {
+    let input: Vec<u32> = read_lines("day06.txt", move |line| {
+      Some(line.split(",").map(|value| value.parse().unwrap()).collect())
+    }).unwrap().next().unwrap();
+
+    println!("Day 06 Part 2 - {}", part2(input, 256));
   }
 }
