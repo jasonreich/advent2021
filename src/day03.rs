@@ -35,11 +35,11 @@ pub fn part1(input: Vec<Vec<bool>>) -> u32 {
 #[cfg(test)]
 mod test {
   use super::*;
-  use crate::util::read_file;
+  use crate::util::read_lines;
 
   #[test]
   fn test_day03_parser() {
-    let mut input = read_file("day03.example", line_parser).unwrap();
+    let mut input = read_lines("day03.example", line_parser).unwrap();
     assert_eq!(vec![false, false, true, false, false], input.next().unwrap());
   }
 
@@ -53,13 +53,13 @@ mod test {
 
   #[test]
   fn example_day03_part1() {
-    let input = read_file("day03.example", line_parser).unwrap().collect();
+    let input = read_lines("day03.example", line_parser).unwrap().collect();
     assert_eq!(198, part1(input));
   }
 
   #[test]
   fn exec_day03_part1() {
-    let input = read_file("day03.txt", line_parser).unwrap().collect();
+    let input = read_lines("day03.txt", line_parser).unwrap().collect();
     println!("Day 03, Part 1: {}", part1(input));
   }
 }
