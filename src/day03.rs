@@ -41,12 +41,13 @@ pub fn part2(input: Vec<Vec<bool>>, use_least_common: bool) -> u32 {
     let mut result = 0;
 
     for i in 0..line_length {
-        let filtered_input: Vec<Vec<bool>> = input.iter()
+        let filtered_input: Vec<Vec<bool>> = input
+            .iter()
             .filter(|line| filter.iter().zip(line.iter()).all(|(x, y)| x == y))
             .map(|line| -> Vec<bool> { line.clone() })
             .collect();
         let common = if filtered_input.len() > 1 {
-            let indexed_input = filtered_input.iter().map(| line | line[i]).collect();
+            let indexed_input = filtered_input.iter().map(|line| line[i]).collect();
             use_least_common != most_common(indexed_input).unwrap_or(true)
         } else {
             filtered_input[0][i]
@@ -54,7 +55,7 @@ pub fn part2(input: Vec<Vec<bool>>, use_least_common: bool) -> u32 {
         filter.push(common);
         result = (result << 1) + (common as u32);
     }
-    
+
     result
 }
 
@@ -103,6 +104,9 @@ mod test {
     #[test]
     fn exec_day03_part2() {
         let input: Vec<Vec<bool>> = read_lines("day03.txt", line_parser).unwrap().collect();
-        println!("Day 03, Part 1: {}", part2(input.clone(), false) * part2(input, true));
+        println!(
+            "Day 03, Part 1: {}",
+            part2(input.clone(), false) * part2(input, true)
+        );
     }
 }

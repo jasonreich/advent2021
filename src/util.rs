@@ -18,7 +18,10 @@ pub fn read_line<T: std::str::FromStr>(path: &str) -> Vec<T> {
                 .map(|value| value.parse().ok().unwrap())
                 .collect(),
         )
-    }).unwrap().next().unwrap()
+    })
+    .unwrap()
+    .next()
+    .unwrap()
 }
 
 pub fn read_lines<T>(
