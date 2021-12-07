@@ -16,6 +16,7 @@ pub fn part2(input: &Crabs) -> i32 {
   (*lowest..=*highest).map(|target| 
     input.iter().map(|source| {
       let distance = (target - source).abs();
+      // Gauss's trick https://www.youtube.com/watch?v=Dd81F6-Ar_0
       distance * (distance + 1) / 2
     }).sum()
   ).min().unwrap()
