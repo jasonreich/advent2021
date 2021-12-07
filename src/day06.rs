@@ -44,7 +44,7 @@ pub fn part2(input: Shoal, iterations: u32) -> i64 {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::util::read_lines;
+    use crate::util::read_line;
 
     #[test]
     fn test_next_tick() {
@@ -60,16 +60,7 @@ mod test {
 
     #[test]
     fn exec_day06_part1() {
-        let input: Vec<u32> = read_lines("day06.txt", move |line| {
-            Some(
-                line.split(",")
-                    .map(|value| value.parse().unwrap())
-                    .collect(),
-            )
-        })
-        .unwrap()
-        .next()
-        .unwrap();
+        let input: Vec<u32> = read_line("day06.txt");
 
         println!("Day 06 Part 1 - {}", part1(input, 80));
     }
@@ -83,16 +74,7 @@ mod test {
 
     #[test]
     fn exec_day06_part2() {
-        let input: Vec<u32> = read_lines("day06.txt", move |line| {
-            Some(
-                line.split(",")
-                    .map(|value| value.parse().unwrap())
-                    .collect(),
-            )
-        })
-        .unwrap()
-        .next()
-        .unwrap();
+        let input: Vec<u32> = read_line("day06.txt");
 
         println!("Day 06 Part 2 - {}", part2(input, 256));
     }

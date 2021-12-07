@@ -11,6 +11,16 @@ pub fn read_file(path: &str) -> Result<impl Iterator<Item = String>> {
     Ok(BufReader::new(file).lines().map(|line| line.unwrap()))
 }
 
+pub fn read_line<T: std::str::FromStr>(path: &str) -> Vec<T> {
+    read_lines(path, move |line| {
+        Some(
+            line.split(",")
+                .map(|value| value.parse().ok().unwrap())
+                .collect(),
+        )
+    }).unwrap().next().unwrap()
+}
+
 pub fn read_lines<T>(
     path: &str,
     line_parser: fn(String) -> Option<T>,
