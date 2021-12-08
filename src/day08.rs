@@ -1,4 +1,7 @@
+use itertools::Itertools;
+
 use crate::util::read_lines;
+use std::collections::HashSet;
 
 type Displays = Vec<String>;
 type Line = (Displays, Displays);
@@ -22,6 +25,38 @@ fn part1(input: impl Iterator<Item = Line>) -> usize {
   }).count()).sum()
 }
 
+lazy_static ! {
+  static ref DIGITS: Vec<&'static str> = { vec![
+    "abcefg", "cf", "acdeg", "acdfg", "bcdf", 
+    "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"
+  ] };
+}
+
+lazy_static ! {
+  static ref VALID: HashSet<&'static str> = DIGITS.iter().map(| &digit | digit).collect();
+}
+
+fn decode(key: &Vec<char>, cyphertext: &String) -> String {
+  cyphertext.chars().map(| c | key[(c as usize) - ('a' as usize)]).sorted().collect()
+}
+
+fn solve((signals, value): Line) -> usize {
+  let solutions: Vec<Vec<char>> = ('a'..='g').permutations(7).filter(| candidate | {
+    signals.iter().all(| display | {
+      VALID.contains(decode(candidate, display).as_str())
+    })
+  }).collect();
+  assert_eq!(solutions.len(), 1);
+  value.iter().map(| display | { 
+    let plaintext = decode(&solutions[0], display);
+    DIGITS.iter().position(| &digit | plaintext == digit).unwrap()
+  }).fold(0, |acc, digit| acc * 10 + digit)
+}
+
+fn part2(input: impl Iterator<Item = Line>) -> usize {
+  input.map(solve).sum()
+}
+
 #[cfg(test)]
 mod test {
   use super::*;
@@ -36,12 +71,24 @@ mod test {
   #[test]
   fn example_day08_part1() {
     let input = read_puzzle("day08.example");
-    assert_eq!(26, part1(input))
+    assert_eq!(26, part1(input));
+  }
+
+  #[test]
+  fn exec_day08_part1() {
+    let input = read_puzzle("day08.txt");
+    println!("Day 08, Part 1 – {}", part1(input));
   }
 
   #[test]
   fn example_day08_part2() {
+    let input = read_puzzle("day08.example");
+    assert_eq!(61229, part2(input));
+  }
+
+  #[test]
+  fn exec_day08_part2() {
     let input = read_puzzle("day08.txt");
-    println!("Day 08, Part 1 – {}", part1(input))
+    println!("Day 08, Part 2 – {}", part2(input));
   }
 }
