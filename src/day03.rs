@@ -22,21 +22,21 @@ fn most_common(input: Vec<bool>) -> Option<bool> {
 }
 
 pub fn part1(input: Vec<Vec<bool>>) -> u32 {
-    let line_length = input.iter().next().unwrap().len();
+    let line_length = input[0].len();
     let mut epsilon: u32 = 0;
     for i in 0..line_length {
         if most_common(input.iter().map(|line| line[i]).collect()).unwrap() {
             epsilon += 1;
         }
-        epsilon = epsilon << 1;
+        epsilon <<= 1;
     }
-    epsilon = epsilon >> 1;
+    epsilon >>= 1;
     let gamma = !epsilon & ((1 << line_length) - 1);
     epsilon * gamma
 }
 
 pub fn part2(input: Vec<Vec<bool>>, use_least_common: bool) -> u32 {
-    let line_length = input.iter().next().unwrap().len();
+    let line_length = input[0].len();
     let mut filter: Vec<bool> = vec![];
     let mut result = 0;
 
@@ -44,7 +44,7 @@ pub fn part2(input: Vec<Vec<bool>>, use_least_common: bool) -> u32 {
         let filtered_input: Vec<Vec<bool>> = input
             .iter()
             .filter(|line| filter.iter().zip(line.iter()).all(|(x, y)| x == y))
-            .map(|line| -> Vec<bool> { line.clone() })
+            .cloned()
             .collect();
         let common = if filtered_input.len() > 1 {
             let indexed_input = filtered_input.iter().map(|line| line[i]).collect();

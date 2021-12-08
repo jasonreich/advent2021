@@ -16,12 +16,12 @@ pub fn parse_input(input: &mut impl Iterator<Item = String>) -> (Calls, Vec<Boar
 type Calls = Vec<u32>;
 
 fn parse_calls(input: String) -> Calls {
-    input.split(",").map(|part| part.parse().unwrap()).collect()
+    input.split(',').map(|part| part.parse().unwrap()).collect()
 }
 
-fn parse_board(mut input: impl Iterator<Item = String>) -> Option<Vec<Vec<u32>>> {
+fn parse_board(input: impl Iterator<Item = String>) -> Option<Vec<Vec<u32>>> {
     let mut board: Vec<Vec<u32>> = Vec::new();
-    while let Some(line) = input.next() {
+    for line in input {
         if line.is_empty() {
             break;
         } else {
@@ -73,7 +73,7 @@ pub fn part1(calls: Calls, mut boards: Vec<Board>) -> Option<u32> {
             }
         }
     }
-    return None;
+    None
 }
 
 pub fn part2(calls: Calls, mut boards: Vec<Board>) -> Option<u32> {
@@ -96,7 +96,7 @@ pub fn part2(calls: Calls, mut boards: Vec<Board>) -> Option<u32> {
             }
         }
     }
-    return last_winner;
+    last_winner
 }
 
 #[cfg(test)]

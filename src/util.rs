@@ -14,7 +14,7 @@ pub fn read_file(path: &str) -> Result<impl Iterator<Item = String>> {
 pub fn read_line<T: std::str::FromStr>(path: &str) -> Vec<T> {
     read_lines(path, move |line| {
         Some(
-            line.split(",")
+            line.split(',')
                 .map(|value| value.parse().ok().unwrap())
                 .collect(),
         )
@@ -29,7 +29,7 @@ pub fn read_lines<T>(
     line_parser: fn(String) -> Option<T>,
 ) -> Result<impl Iterator<Item = T>> {
     let lines_of_file = read_file(path)?;
-    let lines_as_parsed = lines_of_file.filter_map(move |line| line_parser(line));
+    let lines_as_parsed = lines_of_file.filter_map(line_parser);
     Ok(lines_as_parsed)
 }
 

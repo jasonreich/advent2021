@@ -15,7 +15,7 @@ pub fn read_puzzle(filename: &str, with_diag: bool) -> impl Iterator<Item = Coor
     let intervals = read_lines(filename, |line| {
         let values: Vec<u32> = line
             .split(" -> ")
-            .flat_map(|coord| coord.split(","))
+            .flat_map(|coord| coord.split(','))
             .map(|value| value.parse().unwrap())
             .collect();
 

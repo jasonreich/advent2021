@@ -13,7 +13,7 @@ fn read_displays(input: &str) -> Displays {
         .collect()
 }
 
-fn read_puzzle(file: &str) -> impl Iterator<Item = Line> {
+pub fn read_puzzle(file: &str) -> impl Iterator<Item = Line> {
     read_lines(file, |line| {
         let mut halves = line.split(" | ");
         let (signals_half, value_half) = (halves.next().unwrap(), halves.next().unwrap());
@@ -45,10 +45,10 @@ lazy_static! {
 }
 
 lazy_static! {
-    static ref VALID: HashSet<&'static str> = DIGITS.iter().map(|&digit| digit).collect();
+    static ref VALID: HashSet<&'static str> = DIGITS.iter().copied().collect();
 }
 
-fn decode(key: &Vec<char>, cyphertext: &String) -> String {
+fn decode(key: &[char], cyphertext: &str) -> String {
     cyphertext
         .chars()
         .map(|c| key[(c as usize) - ('a' as usize)])
