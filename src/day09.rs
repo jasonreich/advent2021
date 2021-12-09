@@ -1,3 +1,7 @@
+use std::{collections::HashSet};
+
+use itertools::Itertools;
+
 use crate::util::read_lines;
 
 type Puzzle = Vec<Vec<u32>>;
@@ -41,8 +45,41 @@ pub fn part1(input: Puzzle) -> u32 {
   risk
 }
 
+pub fn explore(input: &Puzzle, x: Option<usize>, y: Option<usize>) -> u32 {
+  let mut count = 0;
+  let mut seen: HashSet<(Option<usize>, Option<usize>)> = HashSet::new();
+  let mut stack = vec![(x, y)];
+  let mut index = 0;
+  while index < stack.len() {
+    let (x, y) = stack[index];
+    if !seen.contains(&(x, y)) && get(input, x, y).unwrap_or(9) != 9 {
+      stack.push((minus1(x), y));
+      stack.push((add1(x), y));
+      stack.push((x, minus1(y)));
+      stack.push((x, add1(y)));
+      seen.insert((x, y));
+      count += 1
+    }
+    index += 1;
+  }
+  count
+}
+
 pub fn part2(input: Puzzle) -> u32 {
-  0
+  let mut solutions = vec![];
+  for y in (0..input.len()).map(Some) {
+    for x in (0..input[0].len()).map(Some) {
+      let focus = get(&input, x, y).unwrap();
+      let l = get(&input, minus1(x), y).unwrap_or(u32::MAX);
+      let r = get(&input, add1(x), y).unwrap_or(u32::MAX);
+      let u = get(&input, x, minus1(y)).unwrap_or(u32::MAX);
+      let d = get(&input, x, add1(y)).unwrap_or(u32::MAX);
+      if focus < l && focus < r && focus < u && focus < d {
+        solutions.push(explore(&input, x, y));
+      }
+    }
+  }
+  solutions.iter().sorted().rev().take(3).product()
 }
 
 #[cfg(test)]
