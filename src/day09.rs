@@ -13,10 +13,8 @@ pub fn parse_puzzle(file: &str) -> Puzzle {
 }
 
 fn get(input: &Puzzle, x: Option<usize>, y: Option<usize>) -> Option<u32> {
-  let x = x?;
-  let y = y?;
-  let line = input.get(y)?;
-  let cell = line.get(x)?;
+  let line = input.get(y?)?;
+  let cell = line.get(x?)?;
   Some(*cell)
 }
 
