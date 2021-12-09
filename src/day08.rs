@@ -62,7 +62,8 @@ fn solve((signals, value): Line) -> usize {
         .filter(|candidate| {
             signals
                 .iter()
-                .all(|display| VALID.contains(decode(candidate, display).as_str()))
+                .map(|display| decode(candidate, display))
+                .all(|plaintext| VALID.contains(plaintext.as_str()))
         })
         .collect();
     assert_eq!(solutions.len(), 1);
