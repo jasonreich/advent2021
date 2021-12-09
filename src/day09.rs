@@ -41,6 +41,10 @@ pub fn part1(input: Puzzle) -> u32 {
   risk
 }
 
+pub fn part2(input: Puzzle) -> u32 {
+  0
+}
+
 #[cfg(test)]
 mod test {
   use super::*;
@@ -63,4 +67,17 @@ mod test {
     let input = parse_puzzle("day09.txt");
     println!("Day 09 Part 1 - {}", part1(input));
   }
+  
+  #[test]
+  fn example_day09_part2() {
+    let input = parse_puzzle("day09.example");
+    assert_eq!(1134, part2(input));
+  }
+
+  #[test]
+  fn exec_day09_part2() {
+    let input = parse_puzzle("day09.txt");
+    println!("Day 09 Part 2 - {}", part2(input));
+  }
+  
 }
