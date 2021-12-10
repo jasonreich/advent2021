@@ -1,5 +1,3 @@
-use core::panic;
-
 use itertools::Itertools;
 
 use crate::util::read_lines;
@@ -25,7 +23,7 @@ pub fn score(line: Vec<char>) -> u64 {
               ']' => 57,
               '}' => 1197,
               '>' => 25137,
-              _ => panic!(),
+              _ => unimplemented!()
           }
         }
       },
@@ -59,7 +57,7 @@ pub fn fix(line: Vec<char>) -> u64 {
         ']' => 2,
         '}' => 3,
         '>' => 4,
-        _ => panic!(),
+        _ => unimplemented!(),
     }
   })
 }
