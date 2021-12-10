@@ -47,9 +47,7 @@ pub fn explore(input: &Puzzle, x: Option<usize>, y: Option<usize>) -> u32 {
   let mut count = 0;
   let mut seen: HashSet<(Option<usize>, Option<usize>)> = HashSet::new();
   let mut stack = vec![(x, y)];
-  let mut index = 0;
-  while index < stack.len() {
-    let (x, y) = stack[index];
+  while let Some((x, y)) = stack.pop() {
     if !seen.contains(&(x, y)) && get(input, x, y).unwrap_or(9) != 9 {
       stack.push((minus1(x), y));
       stack.push((add1(x), y));
@@ -58,7 +56,6 @@ pub fn explore(input: &Puzzle, x: Option<usize>, y: Option<usize>) -> u32 {
       seen.insert((x, y));
       count += 1
     }
-    index += 1;
   }
   count
 }
