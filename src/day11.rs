@@ -75,6 +75,10 @@ pub fn part1(input: &mut Puzzle) -> u32 {
   (0..100).map(|_| step(input)).sum()
 }
 
+pub fn part2(input: &mut Puzzle) -> u32 {
+  1 + (0..1000).map(|_| step(input)).take_while(| n | *n != 100).count() as u32
+}
+
 #[cfg(test)]
 mod test {
   use super::*;
@@ -89,5 +93,17 @@ mod test {
   fn exec_day11_part1() {
     let mut input = parse_puzzle("day11.txt");
     println!("Day 11 Part 1 - {}", part1(&mut input));
+  }
+
+  #[test]
+  fn example_day11_part2() {
+    let mut input = parse_puzzle("day11.example");
+    assert_eq!(195, part2(&mut input));
+  }
+
+  #[test]
+  fn exec_day11_part2() {
+    let mut input = parse_puzzle("day11.txt");
+    println!("Day 11 Part 2 - {}", part2(&mut input));
   }
 }
