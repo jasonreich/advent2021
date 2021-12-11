@@ -8,16 +8,86 @@ pub fn parse_puzzle(file: &str) -> Puzzle {
   }).unwrap().collect()
 }
 
-fn step(mut input: Puzzle) {
-  for x in 0..10 {
-    for y in 0..10 {
-      let line = input.get_mut(y).unwrap();
-      line[x] += 1;
+fn update_and_get(input: &mut Puzzle, x: Option<usize>, y: Option<usize>, f: fn (u32) -> u32) -> Option<u32> {
+  let line = input.get_mut(y?)?;
+  let cell = line.get_mut(x?)?;
+  *cell = f(*cell);
+  Some(*cell)
+}
+
+fn add1(input: Option<usize>) -> Option<usize> {
+  input.and_then(| n | n.checked_add(1))
+}
+
+fn minus1(input: Option<usize>) -> Option<usize> {
+  input.and_then(| n | n.checked_sub(1))
+}
+
+fn step(input: &mut Puzzle) -> u32 {
+  let mut flashes = 0;
+
+  let mut stack: Vec<(Option<usize>, Option<usize>)> = vec!();
+  for x in (0..10).map(Some) {
+    for y in (0..10).map(Some) {
+      let cell = update_and_get(input, x, y, |n| n + 1).unwrap();
+      assert!(cell <= 10);
+      if cell == 10 {
+        stack.push((x, y));
+      }
     }
   }
+
+  while let Some((x,y)) = stack.pop() {
+    flashes += 1;
+    [ (minus1(x), minus1(y))
+    , ((x), minus1(y))
+    , (add1(x), minus1(y))
+    , (minus1(x), y)
+    , (add1(x), y)
+    , (minus1(x), add1(y))
+    , ((x), add1(y))
+    , (add1(x), add1(y))
+    ].iter().for_each(| (x, y) | {
+      if let Some(cell) = update_and_get(input, *x, *y, |n| n + 1) {
+        if cell == 10 {
+          stack.push((*x, *y));
+        }
+      }
+    });
+  }
+
+  for x in (0..10).map(Some) {
+    for y in (0..10).map(Some)  {
+      update_and_get(input, x, y, | n | {
+        if n > 9 {
+          0
+        } else {
+          n
+        }
+      });
+    }
+  }
+
+  flashes
+}
+
+pub fn part1(input: &mut Puzzle) -> u32 {
+  (0..100).map(|_| step(input)).sum()
 }
 
 #[cfg(test)]
 mod test {
-  
+  use super::*;
+
+  #[test]
+  fn example_day11_part1() {
+    let mut input = parse_puzzle("day11.example");
+    assert_eq!(1656, part1(&mut input));
+  }
+
+  #[test]
+  fn exec_day11_part1() {
+    let mut input = parse_puzzle("day11.txt");
+    println!("Day 11 Part 1 - {}", part1(&mut input));
+  }
 }
