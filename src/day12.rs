@@ -59,7 +59,7 @@ pub fn part2(input: Puzzle) -> u32 {
             if next.is_some() {
                 next.unwrap()
                     .iter()
-                    .filter(|cave| *cave != "small")
+                    .filter(|cave| *cave != "start")
                     .filter(|cave| is_big(cave) || !used_small || path.iter().all(|c| c != cave))
                     .for_each(|cave| {
                         let mut new_cave = path.clone();
@@ -129,12 +129,12 @@ mod test {
     #[test]
     fn example3_day12_part2() {
         let input = read_puzzle("day12.example3");
-        assert_eq!(3059, part2(input));
+        assert_eq!(3509, part2(input));
     }
 
     #[test]
     fn exec_day12_part2() {
         let input = read_puzzle("day12.txt");
-        println!("Day 12 Part 2 - {}", part1(input));
+        println!("Day 12 Part 2 - {}", part2(input));
     }
 }
