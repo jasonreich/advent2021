@@ -14,8 +14,37 @@ pub fn read_puzzle(file: &str) -> Puzzle {
                 components.next()?.to_string(),
             ))
         })
-        .unwrap(),
+        .unwrap()
+        .flat_map(|(src, tgt)| vec![(src.clone(), tgt.clone()), (tgt, src)]),
     )
+}
+
+pub fn is_big(cave: &String) -> bool {
+    cave.chars().all(|c| c.is_uppercase())
+}
+
+pub fn part1(input: Puzzle) -> u32 {
+    let mut count = 0;
+    let mut paths = vec![vec!["start"]];
+    while let Some(path) = paths.pop() {
+        let end = path[0];
+        if end != "end" {
+            let next = input.get_vec(end);
+            if next.is_some() {
+                next.unwrap()
+                    .iter()
+                    .filter(|cave| is_big(cave) || path.iter().all(|c| c != cave))
+                    .for_each(|cave| {
+                        let mut new_cave = path.clone();
+                        new_cave.insert(0, cave);
+                        paths.push(new_cave)
+                    });
+            }
+        } else {
+            count += 1;
+        }
+    }
+    count
 }
 
 #[cfg(test)]
@@ -26,5 +55,35 @@ mod test {
     fn test_read_puzzle() {
         let input = read_puzzle("day12.example1");
         assert_eq!(2, input.get_vec("start").unwrap().len());
+    }
+
+    #[test]
+    fn test_is_big() {
+        assert!(is_big(&"ABC".to_string()));
+        assert!(!is_big(&"abc".to_string()));
+    }
+
+    #[test]
+    fn example1_day12_part1() {
+        let input = read_puzzle("day12.example1");
+        assert_eq!(10, part1(input));
+    }
+
+    #[test]
+    fn example2_day12_part1() {
+        let input = read_puzzle("day12.example2");
+        assert_eq!(19, part1(input));
+    }
+
+    #[test]
+    fn example3_day12_part1() {
+        let input = read_puzzle("day12.example3");
+        assert_eq!(226, part1(input));
+    }
+
+    #[test]
+    fn exec_day12_part1() {
+        let input = read_puzzle("day12.txt");
+        println!("Day 12 Part 1 - {}", part1(input));
     }
 }
