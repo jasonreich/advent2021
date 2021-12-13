@@ -1,4 +1,4 @@
-use std::{collections::HashSet, iter::FromIterator};
+use std::collections::HashSet;
 
 use crate::util::read_file;
 use itertools::Itertools;
@@ -29,7 +29,7 @@ pub fn parse_puzzle(file: &str) -> Puzzle {
         } else {
             let captures = fold_matcher.captures(line.as_str()).unwrap();
             folds.push((
-                captures[1].chars().nth(0).unwrap(),
+                captures[1].chars().next().unwrap(),
                 captures[2].parse().unwrap(),
             ))
         }
@@ -67,7 +67,7 @@ pub fn part2(input: Puzzle) -> Vec<Coord> {
 }
 
 pub fn print_puzzle(input: Vec<Coord>) {
-    let input_set: HashSet<Coord> = HashSet::from_iter(input.iter().copied());
+    let input_set: HashSet<Coord> = input.iter().copied().collect();
     let max_x = input.iter().map(|c| c.0).max().unwrap();
     let max_y = input.iter().map(|c| c.1).max().unwrap();
     for y in 0..=max_y {

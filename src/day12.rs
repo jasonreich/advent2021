@@ -1,26 +1,24 @@
 use itertools::Itertools;
 use multimap::MultiMap;
-use std::iter::FromIterator;
 
 use crate::util::read_lines;
 
 type Puzzle = MultiMap<String, String>;
 
 pub fn read_puzzle(file: &str) -> Puzzle {
-    MultiMap::from_iter(
-        read_lines(file, |line| {
-            let mut components = line.split('-');
-            Some((
-                components.next()?.to_string(),
-                components.next()?.to_string(),
-            ))
-        })
-        .unwrap()
-        .flat_map(|(src, tgt)| vec![(src.clone(), tgt.clone()), (tgt, src)]),
-    )
+    read_lines(file, |line| {
+        let mut components = line.split('-');
+        Some((
+            components.next()?.to_string(),
+            components.next()?.to_string(),
+        ))
+    })
+    .unwrap()
+    .flat_map(|(src, tgt)| vec![(src.clone(), tgt.clone()), (tgt, src)])
+    .collect()
 }
 
-pub fn is_big(cave: &String) -> bool {
+pub fn is_big(cave: &str) -> bool {
     cave.chars().all(|c| c.is_uppercase())
 }
 
@@ -30,10 +28,8 @@ pub fn part1(input: Puzzle) -> u32 {
     while let Some(path) = paths.pop() {
         let end = path[0];
         if end != "end" {
-            let next = input.get_vec(end);
-            if next.is_some() {
-                next.unwrap()
-                    .iter()
+            if let Some(next) = input.get_vec(end) {
+                next.iter()
                     .filter(|cave| is_big(cave) || path.iter().all(|c| c != cave))
                     .for_each(|cave| {
                         let mut new_cave = path.clone();
@@ -60,10 +56,8 @@ pub fn part2(input: Puzzle) -> u32 {
                 .duplicates()
                 .count()
                 > 0;
-            let next = input.get_vec(end);
-            if next.is_some() {
-                next.unwrap()
-                    .iter()
+            if let Some(next) = input.get_vec(end) {
+                next.iter()
                     .filter(|cave| *cave != "start")
                     .filter(|cave| is_big(cave) || !used_small || path.iter().all(|c| c != cave))
                     .for_each(|cave| {
