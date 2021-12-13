@@ -35,10 +35,7 @@ pub fn parse_puzzle(file: &str) -> Puzzle {
         }
     }
 
-    Puzzle {
-        coords: coords,
-        folds: folds,
-    }
+    Puzzle { coords, folds }
 }
 
 pub fn part1(input: Puzzle) -> usize {

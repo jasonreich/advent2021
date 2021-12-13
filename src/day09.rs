@@ -14,7 +14,7 @@ pub fn parse_puzzle(file: &str) -> Puzzle {
     .collect()
 }
 
-fn get(input: &Puzzle, x: Option<usize>, y: Option<usize>) -> Option<u32> {
+fn get(input: &[Vec<u32>], x: Option<usize>, y: Option<usize>) -> Option<u32> {
     let line = input.get(y?)?;
     let cell = line.get(x?)?;
     Some(*cell)
@@ -45,7 +45,7 @@ pub fn part1(input: Puzzle) -> u32 {
     risk
 }
 
-pub fn explore(input: &Puzzle, x: Option<usize>, y: Option<usize>) -> u32 {
+pub fn explore(input: &[Vec<u32>], x: Option<usize>, y: Option<usize>) -> u32 {
     let mut count = 0;
     let mut seen: HashSet<(Option<usize>, Option<usize>)> = HashSet::new();
     let mut stack = vec![(x, y)];
