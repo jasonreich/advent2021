@@ -54,7 +54,12 @@ pub fn part2(input: Puzzle) -> u32 {
     while let Some(path) = paths.pop() {
         let end = path[0];
         if end != "end" {
-            let used_small = path.iter().filter(|&&cave| !is_big(&cave.to_string())).duplicates().count() > 0;
+            let used_small = path
+                .iter()
+                .filter(|&&cave| !is_big(&cave.to_string()))
+                .duplicates()
+                .count()
+                > 0;
             let next = input.get_vec(end);
             if next.is_some() {
                 next.unwrap()
