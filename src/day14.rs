@@ -15,19 +15,22 @@ pub struct Puzzle {
 
 pub fn parse_puzzle(file: &str) -> Puzzle {
     let mut lines = read_file(file).unwrap();
-    
+
     let template = lines.next().unwrap();
-    
+
     lines.next();
 
-    let mut substitutions = HashMap::new();
+    let substitutions: Substititions = lines
+        .map(|line| {
+            let chars: Vec<char> = line.chars().collect();
+            ((chars[0], chars[1]), chars[6])
+        })
+        .collect();
 
-    while let Some(line) = lines.next() {
-        let chars: Vec<char> = line.chars().collect();
-        substitutions.insert((chars[0], chars[1]), chars[6]);
+    Puzzle {
+        template,
+        substitutions,
     }
-
-    Puzzle { template, substitutions }
 }
 
 pub fn step(template: String, substitutions: &Substititions) -> String {
@@ -59,40 +62,37 @@ pub fn part1(input: Puzzle) -> usize {
     }
 }
 
-pub fn increase<K: Eq+Hash+Copy>(m: &mut HashMap<K, usize>, k: &K, i: usize) {
+pub fn increase<K: Eq + Hash + Copy>(m: &mut HashMap<K, usize>, k: &K, i: usize) {
     let old_value = *m.get(k).unwrap_or(&0);
     m.insert(*k, old_value + i);
 }
 
 pub fn part2(input: &Puzzle, steps: u32) -> usize {
-    let mut bigram_counts: HashMap<Bigram, usize> = HashMap::new();
-
     // Initialise
-    let template: Vec<char> = input.template.chars().collect();
-    for i in 0..(template.len() - 1) {
-        let bigram = (template[i], template[i+1]);
-        increase(&mut bigram_counts, &bigram, 1);
-    }
+    let mut bigram_counts = input.template.chars().tuple_windows().counts();
 
+    // Iterator
     for _ in 0..steps {
-        let mut new_counts: HashMap<Bigram, usize> = HashMap::new();
-        for (bigram, count) in bigram_counts {
-            if let Some(c) = input.substitutions.get(&bigram) {
-                let (a, b) = bigram;
-                increase(&mut new_counts, &(a, *c), count);
-                increase(&mut new_counts, &(*c, b), count);
-            } else {
-                increase(&mut new_counts, &bigram, count);
-            }
-        }
-        bigram_counts = new_counts;
+        bigram_counts = bigram_counts
+            .iter()
+            .flat_map(|((a, b), count)| {
+                if let Some(c) = input.substitutions.get(&(*a, *b)) {
+                    vec![((*a, *c), *count), ((*c, *b), *count)]
+                } else {
+                    vec![((*a, *b), *count)]
+                }
+            })
+            .into_grouping_map()
+            .sum();
     }
 
-    let mut counts: HashMap<char, usize> = HashMap::new();
-    for ((a, _), count) in bigram_counts {
-        increase(&mut counts, &a, count);
-    }
-    increase(&mut counts, template.last().unwrap(), 1);
+    // Summarise
+    let mut counts: HashMap<char, usize> = bigram_counts
+        .iter()
+        .map(|((a, _), count)| (*a, *count))
+        .into_grouping_map()
+        .sum();
+    increase(&mut counts, &input.template.chars().last().unwrap(), 1);
 
     if let MinMaxResult::MinMax(lower, upper) = counts.values().minmax() {
         upper - lower
