@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::hash::Hash;
 
 use itertools::{Itertools, MinMaxResult};
 
@@ -62,11 +61,6 @@ pub fn part1(input: Puzzle) -> usize {
     }
 }
 
-pub fn increase<K: Eq + Hash + Copy>(m: &mut HashMap<K, usize>, k: &K, i: usize) {
-    let old_value = *m.get(k).unwrap_or(&0);
-    m.insert(*k, old_value + i);
-}
-
 pub fn part2(input: &Puzzle, steps: u32) -> usize {
     // Initialise
     let mut bigram_counts = input.template.chars().tuple_windows().counts();
@@ -92,7 +86,7 @@ pub fn part2(input: &Puzzle, steps: u32) -> usize {
         .map(|((a, _), count)| (*a, *count))
         .into_grouping_map()
         .sum();
-    increase(&mut counts, &input.template.chars().last().unwrap(), 1);
+    *counts.get_mut(&input.template.chars().last().unwrap()).unwrap() += 1;
 
     if let MinMaxResult::MinMax(lower, upper) = counts.values().minmax() {
         upper - lower
