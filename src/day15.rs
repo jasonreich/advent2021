@@ -41,31 +41,38 @@ pub fn part1(input: Puzzle) -> u32 {
   let mut distances: HashMap<Node, u32> = HashMap::new();
   distances.insert((0,0), 0);
   
-  let mut visit_next: Vec<Node> = vec![(0,0)];
+  let mut visit_next: Vec<Node> = Vec::new();
+  visit_next.push((0,0));
 
-  while let Some(next) = visit_next.pop() {
-    if visited.contains(&next) {
+  while !visit_next.is_empty() {
+    let current = visit_next.remove(0);
+
+    if visited.contains(&current) {
       continue;
     }
 
-    for (x, y) in neighbours(next) {
+    if current == goal {
+      break;
+    }
+
+    let current_distance = distances[&current];
+
+    for (x, y) in neighbours(current) {
       if visited.contains(&(x, y)) {
         continue;
       }
 
       if let Some(distance_to_node) = input.get(y).and_then(| line | line.get(x)) {
-        let new_distance = distances.get(&next).unwrap_or(&u32::MAX) + distance_to_node;
-        let current_distance = *distances.get(&(x, y)).unwrap_or(&u32::MAX);
-        distances.insert((x,y),  new_distance.min(current_distance));
-        visit_next.push((x, y));
+        let distance_from_start = current_distance + distance_to_node;
+        let existing_distance = *distances.get(&(x, y)).unwrap_or(&u32::MAX);
+        let new_distance = distance_from_start.min(existing_distance);
+        distances.insert((x,y),  new_distance);
+        visit_next.push((x,y));
       }
     }
 
-    visited.insert(next);
-  }
-
-  for ((x, y), d) in distances.iter() {
-    println!("({}, {}) = {}", x, y, d);
+    visit_next.sort_by_cached_key(|node| distances.get(node).unwrap_or(&u32::MAX));
+    visited.insert(current);
   }
 
   distances[&goal]
@@ -79,5 +86,11 @@ mod test {
     fn example_day15_part1() {
         let input = parse_puzzle("day15.example");
         assert_eq!(40, part1(input));
+    }
+
+    #[test]
+    fn exec_day15_part1() {
+        let input = parse_puzzle("day15.txt");
+        println!("Day 15 Part 1 - {}", part1(input));
     }
 }
