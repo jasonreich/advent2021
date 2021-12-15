@@ -3,8 +3,6 @@ use std::{
     iter::repeat, cmp::Ordering,
 };
 
-use itertools::Itertools;
-
 use crate::util::read_lines;
 
 type Puzzle = Vec<Vec<u32>>;
@@ -67,7 +65,6 @@ pub fn part1(input: Puzzle) -> u32 {
     let goal = (width - 1, height - 1);
 
     // Initialise
-    let mut count = 0;
     let mut visited: HashSet<Node> = HashSet::new();
     let mut distances: HashMap<Node, u32> = HashMap::new();
     distances.insert((0, 0), 0);
@@ -108,14 +105,12 @@ pub fn part1(input: Puzzle) -> u32 {
         }
 
         visited.insert(current);
-
-        count += 1;
     }
 
     distances[&goal]
 }
 
-pub fn foo(cell: u32, index: usize) -> u32 {
+pub fn special_add(cell: u32, index: usize) -> u32 {
     (cell - 1 + index as u32) % 9 + 1
 }
 
@@ -126,7 +121,7 @@ pub fn part2(input: Puzzle) -> u32 {
             repeat(line)
                 .take(5)
                 .enumerate()
-                .map(|(i, segment)| segment.iter().map(move |cell| foo(*cell, i)))
+                .map(|(i, segment)| segment.iter().map(move |cell| special_add(*cell, i)))
                 .flatten()
                 .collect()
         })
@@ -138,7 +133,7 @@ pub fn part2(input: Puzzle) -> u32 {
         .map(|(i, segment)| -> Puzzle {
             segment
                 .iter()
-                .map(move |line| line.iter().map(|cell| foo(*cell, i)).collect())
+                .map(move |line| line.iter().map(|cell| special_add(*cell, i)).collect())
                 .collect()
         })
         .flatten()
