@@ -86,7 +86,9 @@ pub fn part2(input: &Puzzle, steps: u32) -> usize {
         .map(|((a, _), count)| (*a, *count))
         .into_grouping_map()
         .sum();
-    *counts.get_mut(&input.template.chars().last().unwrap()).unwrap() += 1;
+    *counts
+        .get_mut(&input.template.chars().last().unwrap())
+        .unwrap() += 1;
 
     if let MinMaxResult::MinMax(lower, upper) = counts.values().minmax() {
         upper - lower
