@@ -1,6 +1,6 @@
 use std::{
-    collections::{HashMap, HashSet},
-    iter::repeat,
+    collections::{HashMap, HashSet, BinaryHeap},
+    iter::repeat, cmp::Ordering,
 };
 
 use itertools::Itertools;
@@ -33,6 +33,34 @@ pub fn neighbours((x, y): Node) -> impl Iterator<Item = Node> {
     output.into_iter()
 }
 
+#[derive(Copy, Clone, Debug)]
+struct MinNode {
+    distance: u32,
+    node: Node,
+}
+
+impl PartialEq for MinNode {
+    fn eq(&self, other: &Self) -> bool {
+        self.cmp(other) == Ordering::Equal
+    }
+}
+
+impl Eq for MinNode {
+
+}
+
+impl PartialOrd for MinNode {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for MinNode {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        other.distance.cmp(&self.distance)
+    }
+}
+
 pub fn part1(input: Puzzle) -> u32 {
     let height = input.len();
     let width = input[0].len();
@@ -44,15 +72,16 @@ pub fn part1(input: Puzzle) -> u32 {
     let mut distances: HashMap<Node, u32> = HashMap::new();
     distances.insert((0, 0), 0);
 
-    let mut visit_next: Vec<Node> = Vec::new();
-    visit_next.push((0, 0));
+    let mut visit_next: BinaryHeap<MinNode> = BinaryHeap::new();
+    visit_next.push(MinNode { distance: 0, node: (0, 0)});
 
     while !visit_next.is_empty() {
-        let smallest_position = visit_next
-            .iter()
-            .position_min_by_key(|node| distances.get(node).unwrap_or(&u32::MAX))
-            .unwrap();
-        let current = visit_next.remove(smallest_position);
+        // let smallest_position = visit_next
+        //     .iter()
+        //     .position_min_by_key(|node| distances.get(node).unwrap_or(&u32::MAX))
+        //     .unwrap();
+        // let current = visit_next.remove(smallest_position);
+        let current = visit_next.pop().unwrap().node;
 
         if visited.contains(&current) {
             continue;
@@ -74,16 +103,13 @@ pub fn part1(input: Puzzle) -> u32 {
                 let existing_distance = *distances.get(&(x, y)).unwrap_or(&u32::MAX);
                 let new_distance = distance_from_start.min(existing_distance);
                 distances.insert((x, y), new_distance);
-                visit_next.push((x, y));
+                visit_next.push(MinNode { distance: new_distance, node: (x, y) });
             }
         }
 
         visited.insert(current);
 
         count += 1;
-        if count % 2500 == 0 {
-            println!("{}", count);
-        }
     }
 
     distances[&goal]
@@ -143,10 +169,9 @@ mod test {
         assert_eq!(315, part2(input));
     }
 
-    // Takes too long to run
-    // #[test]
-    // fn exec_day15_part2() {
-    //     let input = parse_puzzle("day15.txt");
-    //     println!("Day 15 Part 2 - {}", part2(input));
-    // }
+    #[test]
+    fn exec_day15_part2() {
+        let input = parse_puzzle("day15.txt");
+        println!("Day 15 Part 2 - {}", part2(input));
+    }
 }
