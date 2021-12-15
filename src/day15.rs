@@ -74,25 +74,20 @@ pub fn part1(input: Puzzle) -> u32 {
         node: (0, 0),
     });
 
-    while !visit_next.is_empty() {
-        // let smallest_position = visit_next
-        //     .iter()
-        //     .position_min_by_key(|node| distances.get(node).unwrap_or(&u32::MAX))
-        //     .unwrap();
-        // let current = visit_next.remove(smallest_position);
-        let current = visit_next.pop().unwrap().node;
-
-        if visited.contains(&current) {
+    while let Some(MinNode {
+        distance: current_distance,
+        node: current_node,
+    }) = visit_next.pop()
+    {
+        if visited.contains(&current_node) {
             continue;
         }
 
-        if current == goal {
+        if current_node == goal {
             break;
         }
 
-        let current_distance = distances[&current];
-
-        for (x, y) in neighbours(current) {
+        for (x, y) in neighbours(current_node) {
             if visited.contains(&(x, y)) {
                 continue;
             }
@@ -109,7 +104,7 @@ pub fn part1(input: Puzzle) -> u32 {
             }
         }
 
-        visited.insert(current);
+        visited.insert(current_node);
     }
 
     distances[&goal]
