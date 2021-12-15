@@ -1,6 +1,7 @@
 use std::{
-    collections::{HashMap, HashSet, BinaryHeap},
-    iter::repeat, cmp::Ordering,
+    cmp::Ordering,
+    collections::{BinaryHeap, HashMap, HashSet},
+    iter::repeat,
 };
 
 use crate::util::read_lines;
@@ -43,9 +44,7 @@ impl PartialEq for MinNode {
     }
 }
 
-impl Eq for MinNode {
-
-}
+impl Eq for MinNode {}
 
 impl PartialOrd for MinNode {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -70,7 +69,10 @@ pub fn part1(input: Puzzle) -> u32 {
     distances.insert((0, 0), 0);
 
     let mut visit_next: BinaryHeap<MinNode> = BinaryHeap::new();
-    visit_next.push(MinNode { distance: 0, node: (0, 0)});
+    visit_next.push(MinNode {
+        distance: 0,
+        node: (0, 0),
+    });
 
     while !visit_next.is_empty() {
         // let smallest_position = visit_next
@@ -100,7 +102,10 @@ pub fn part1(input: Puzzle) -> u32 {
                 let existing_distance = *distances.get(&(x, y)).unwrap_or(&u32::MAX);
                 let new_distance = distance_from_start.min(existing_distance);
                 distances.insert((x, y), new_distance);
-                visit_next.push(MinNode { distance: new_distance, node: (x, y) });
+                visit_next.push(MinNode {
+                    distance: new_distance,
+                    node: (x, y),
+                });
             }
         }
 
