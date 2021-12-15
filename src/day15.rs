@@ -1,4 +1,9 @@
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet},
+    iter::repeat,
+};
+
+use itertools::Itertools;
 
 use crate::util::read_lines;
 
@@ -34,6 +39,7 @@ pub fn part1(input: Puzzle) -> u32 {
     let goal = (width - 1, height - 1);
 
     // Initialise
+    let mut count = 0;
     let mut visited: HashSet<Node> = HashSet::new();
     let mut distances: HashMap<Node, u32> = HashMap::new();
     distances.insert((0, 0), 0);
@@ -42,7 +48,11 @@ pub fn part1(input: Puzzle) -> u32 {
     visit_next.push((0, 0));
 
     while !visit_next.is_empty() {
-        let current = visit_next.remove(0);
+        let smallest_position = visit_next
+            .iter()
+            .position_min_by_key(|node| distances.get(node).unwrap_or(&u32::MAX))
+            .unwrap();
+        let current = visit_next.remove(smallest_position);
 
         if visited.contains(&current) {
             continue;
@@ -68,11 +78,47 @@ pub fn part1(input: Puzzle) -> u32 {
             }
         }
 
-        visit_next.sort_by_cached_key(|node| distances.get(node).unwrap_or(&u32::MAX));
         visited.insert(current);
+
+        count += 1;
+        if count % 2500 == 0 {
+            println!("{}", count);
+        }
     }
 
     distances[&goal]
+}
+
+pub fn foo(cell: u32, index: usize) -> u32 {
+    (cell - 1 + index as u32) % 9 + 1
+}
+
+pub fn part2(input: Puzzle) -> u32 {
+    let wider_input: Puzzle = input
+        .iter()
+        .map(|line| {
+            repeat(line)
+                .take(5)
+                .enumerate()
+                .map(|(i, segment)| segment.iter().map(move |cell| foo(*cell, i)))
+                .flatten()
+                .collect()
+        })
+        .collect();
+
+    let bigger_input: Puzzle = repeat(wider_input)
+        .take(5)
+        .enumerate()
+        .map(|(i, segment)| -> Puzzle {
+            segment
+                .iter()
+                .map(move |line| line.iter().map(|cell| foo(*cell, i)).collect())
+                .collect()
+        })
+        .flatten()
+        .collect();
+
+    part1(bigger_input)
 }
 
 #[cfg(test)]
@@ -90,4 +136,17 @@ mod test {
         let input = parse_puzzle("day15.txt");
         println!("Day 15 Part 1 - {}", part1(input));
     }
+
+    #[test]
+    fn example_day15_part2() {
+        let input = parse_puzzle("day15.example");
+        assert_eq!(315, part2(input));
+    }
+
+    // Takes too long to run
+    // #[test]
+    // fn exec_day15_part2() {
+    //     let input = parse_puzzle("day15.txt");
+    //     println!("Day 15 Part 2 - {}", part2(input));
+    // }
 }
