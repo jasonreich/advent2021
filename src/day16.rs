@@ -34,7 +34,12 @@ impl<'a> BinarySequence<'a> {
     }
 }
 
-fn packet(sequence: &mut BinarySequence) -> Option<(u64, u64)> {
+struct PacketResult {
+    version: u64,
+    value: u64,
+}
+
+fn packet(sequence: &mut BinarySequence) -> Option<PacketResult> {
     let mut total_version = sequence.eat('V', 3)?;
     let packet_type = sequence.eat('T', 3)?;
 
@@ -50,7 +55,10 @@ fn packet(sequence: &mut BinarySequence) -> Option<(u64, u64)> {
                 break;
             }
         }
-        Some((total_version, literal))
+        Some(PacketResult {
+            version: total_version,
+            value: literal,
+        })
     } else {
         // Operator
         let length_type = sequence.eat('I', 1)?;
@@ -61,15 +69,15 @@ fn packet(sequence: &mut BinarySequence) -> Option<(u64, u64)> {
             let substring = sequence.take(bit_length as usize);
             let mut subsequence = BinarySequence::new(substring.chars());
             while let Some(subpacket) = packet(&mut subsequence) {
-                total_version += subpacket.0;
-                subpackets.push(subpacket.1);
+                total_version += subpacket.version;
+                subpackets.push(subpacket.value);
             }
         } else {
             let packet_count = sequence.eat('c', 11)?;
             for _ in 0..packet_count {
                 let subpacket = packet(sequence).unwrap();
-                total_version += subpacket.0;
-                subpackets.push(subpacket.1);
+                total_version += subpacket.version;
+                subpackets.push(subpacket.value);
             }
         }
 
@@ -83,7 +91,10 @@ fn packet(sequence: &mut BinarySequence) -> Option<(u64, u64)> {
             7 => (subpackets[0] == subpackets[1]) as u64,
             _ => unimplemented!(),
         };
-        Some((total_version, result))
+        Some(PacketResult {
+            version: total_version,
+            value: result,
+        })
     }
 }
 
@@ -92,7 +103,7 @@ pub fn part1(input: String) -> u64 {
     let mut sequence = BinarySequence::new(input.chars());
     let result = packet(&mut sequence);
     // println!();
-    result.unwrap().0
+    result.unwrap().version
 }
 
 pub fn part2(input: String) -> u64 {
@@ -100,7 +111,7 @@ pub fn part2(input: String) -> u64 {
     let mut sequence = BinarySequence::new(input.chars());
     let result = packet(&mut sequence);
     // println!();
-    result.unwrap().1
+    result.unwrap().value
 }
 
 #[cfg(test)]
