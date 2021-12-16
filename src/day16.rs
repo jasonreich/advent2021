@@ -1,4 +1,4 @@
-use std::{cell::Cell, str::Chars};
+use std::str::Chars;
 
 use itertools::Itertools;
 
@@ -13,24 +13,22 @@ pub fn parse_hexstring(input: &str) -> String {
 }
 
 struct BinarySequence<'a> {
-    chars: Cell<Chars<'a>>,
+    chars: &'a mut Chars<'a>,
 }
 
 impl<'a> BinarySequence<'a> {
-    fn new(input: Chars<'a>) -> BinarySequence<'a> {
-        BinarySequence {
-            chars: Cell::new(input),
-        }
+    fn new(input: &'a mut Chars<'a>) -> BinarySequence<'a> {
+        BinarySequence { chars: input }
     }
 
     fn eat(&mut self, _: char, n: usize) -> Option<u64> {
-        let substring: String = self.chars.get_mut().take(n).join("");
+        let substring: String = self.chars.take(n).join("");
         // print!("{}", repeat(label).take(n).join(""));
         u64::from_str_radix(&substring, 2).ok()
     }
 
     fn take(&mut self, n: usize) -> String {
-        self.chars.get_mut().take(n).join("")
+        self.chars.take(n).join("")
     }
 }
 
@@ -67,7 +65,8 @@ fn packet(sequence: &mut BinarySequence) -> Option<PacketResult> {
         if length_type == 0 {
             let bit_length = sequence.eat('l', 15)?;
             let substring = sequence.take(bit_length as usize);
-            let mut subsequence = BinarySequence::new(substring.chars());
+            let mut chars = substring.chars();
+            let mut subsequence = BinarySequence::new(&mut chars);
             while let Some(subpacket) = packet(&mut subsequence) {
                 total_version += subpacket.version;
                 subpackets.push(subpacket.value);
@@ -100,7 +99,8 @@ fn packet(sequence: &mut BinarySequence) -> Option<PacketResult> {
 
 pub fn part1(input: String) -> u64 {
     // println!("{}", input);
-    let mut sequence = BinarySequence::new(input.chars());
+    let mut chars = input.chars();
+    let mut sequence = BinarySequence::new(&mut chars);
     let result = packet(&mut sequence);
     // println!();
     result.unwrap().version
@@ -108,7 +108,8 @@ pub fn part1(input: String) -> u64 {
 
 pub fn part2(input: String) -> u64 {
     // println!("{}", input);
-    let mut sequence = BinarySequence::new(input.chars());
+    let mut chars = input.chars();
+    let mut sequence = BinarySequence::new(&mut chars);
     let result = packet(&mut sequence);
     // println!();
     result.unwrap().value
