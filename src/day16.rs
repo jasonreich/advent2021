@@ -1,21 +1,26 @@
-use std::{str::Chars, cell::Cell};
+use std::{cell::Cell, str::Chars};
 
 use itertools::Itertools;
 
 pub fn parse_hexstring(input: &str) -> String {
-    input.chars().map(|c| {
-        let digit = c.to_digit(16).unwrap();
-        format!("{:04b}", digit)
-    }).join("")
+    input
+        .chars()
+        .map(|c| {
+            let digit = c.to_digit(16).unwrap();
+            format!("{:04b}", digit)
+        })
+        .join("")
 }
 
 struct BinarySequence<'a> {
-    chars: Cell<Chars<'a>>
+    chars: Cell<Chars<'a>>,
 }
 
 impl<'a> BinarySequence<'a> {
     fn new(input: Chars<'a>) -> BinarySequence<'a> {
-        BinarySequence { chars: Cell::new(input) }
+        BinarySequence {
+            chars: Cell::new(input),
+        }
     }
 
     fn eat(&mut self, _: char, n: usize) -> Option<u64> {
@@ -105,8 +110,14 @@ mod test {
     #[test]
     fn test_parse_hexstring() {
         assert_eq!("0001", parse_hexstring("1"));
-        assert_eq!("00111000000000000110111101000101001010010001001000000000", parse_hexstring("38006F45291200"));
-        assert_eq!("11101110000000001101010000001100100000100011000001100000", parse_hexstring("EE00D40C823060"));
+        assert_eq!(
+            "00111000000000000110111101000101001010010001001000000000",
+            parse_hexstring("38006F45291200")
+        );
+        assert_eq!(
+            "11101110000000001101010000001100100000100011000001100000",
+            parse_hexstring("EE00D40C823060")
+        );
     }
 
     #[test]
