@@ -42,8 +42,8 @@ fn packet(sequence: &mut BinarySequence) -> Option<PacketResult> {
     let packet_type = sequence.eat('T', 3)?;
 
     if packet_type == 4 {
-        let mut literal = 0;
         // Literal
+        let mut literal = 0;
         loop {
             let keep_reading = sequence.eat('R', 1)?;
             literal <<= 4;
