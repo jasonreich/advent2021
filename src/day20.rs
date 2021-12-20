@@ -87,6 +87,21 @@ pub fn part1(puzzle: Puzzle) -> usize {
   image.iter().filter(|pixel| **pixel).count()
 }
 
+pub fn part2(puzzle: Puzzle) -> usize {
+  let mut image = puzzle.input;
+
+  let mut default = false;
+
+  for _ in 0..50 {
+    image = decompress(image, &puzzle.algorithm, default);
+    if puzzle.algorithm[0] {
+      default = !default;
+    }
+  }
+
+  image.iter().filter(|pixel| **pixel).count()
+}
+
 #[cfg(test)]
 mod test {
   use ndarray::array;
@@ -126,5 +141,19 @@ mod test {
     let puzzle = parse_puzzle("day20.txt");
 
     println!("Day 20 Part 1 - {}", part1(puzzle));
+  }
+
+  #[test]
+  fn example_day20_part2() {
+    let puzzle = parse_puzzle("day20.example");
+
+    assert_eq!(3351, part2(puzzle));
+  }
+
+  #[test]
+  fn exec_day20_part2() {
+    let puzzle = parse_puzzle("day20.txt");
+
+    println!("Day 20 Part 2 - {}", part2(puzzle));
   }
 }
